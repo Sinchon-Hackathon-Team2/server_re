@@ -184,3 +184,20 @@ def my_post(request):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# post 7. 포스트 상세 조회
+@api_view(['GET'])
+@permission_classes((permissions.IsAuthenticated,))
+def postDetail(request):
+    user_id = request.data.get('user_id')
+    post_id = request.data.get('post_id')
+    post = Post.objects.get(post_id=post_id)
+    postData = post.data
+
+    like= Post.objects.filter(post_id=post_id).values()
+
+    likeData = list(like)
+
+    if len(likeData) != 0:
+        postData["isLike"]
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
