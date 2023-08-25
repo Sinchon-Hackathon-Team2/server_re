@@ -216,6 +216,7 @@ def serchMusic(request):
         "part": "snippet",
         "maxResults": 10,
         "q": word,
+        "type": "video",
         "key": "AIzaSyAVernaWFOQLRicwb1VumSN9HAByQBNOiw"
     }
 
@@ -226,27 +227,21 @@ def serchMusic(request):
 
     results = []
 
-    IDs = []
-    # https://www.youtube.com/watch?v=
     for video in videoList:
         dict = {}
-        v = video["id"]
-        # id = v["videoId"]
-        IDs.append(v)
-        print(IDs)
+        id = video["id"]["videoId"]
 
         snippet = video["snippet"]
-        # print(snippet)
         title = snippet["title"]
         print(title)
         thumbnail = snippet["thumbnails"]["default"]["url"]
         print(thumbnail)
         channel = snippet["channelTitle"]
 
-        dict = {"title":title, "thumbnail":thumbnail, "channelTitle":channel}
+        dict = {"title":title, "thumbnail":thumbnail, "channelTitle":channel, "url":f"https://www.youtube.com/watch?v={id}"}
 
         results.append(dict)
-        
+
 
     return Response(results, status=status.HTTP_200_OK)
     # print(data)
