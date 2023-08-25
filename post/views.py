@@ -15,11 +15,13 @@ class PostViewSet(viewsets.ModelViewSet):
 # post 1. 글 작성 (로그인)
 
 @api_view(['POST'])
-@permission_classes((permissions.IsAuthenticated,))
+# @permission_classes((permissions.IsAuthenticated,))
 def add_post(request):
-    user = request.user
-    univ = user.univ_id
-    univ_id = Univ.objects.get(id=univ)
+    user = User.objects.get(id=1)
+    univ_id = Univ.objects.get(id=1)
+    # user = request.user
+    # univ = user.univ_id
+    # univ_id = Univ.objects.get(id=univ)
 
     # 프론트엔드로부터 받는 정보
     content = request.data.get('content')
@@ -181,5 +183,4 @@ def my_post(request):
     serializer = MyPostSerializer(my_posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
-
 

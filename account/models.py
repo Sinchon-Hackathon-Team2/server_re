@@ -31,8 +31,8 @@ class UserManager(BaseUserManager):
         
         univObj = Univ.objects.get(univName = "홍익대학교")
 
-        superuser = self.create_user(
-            username="admin",
+        superuser = self.create_superuser(
+            # username="admin",
             email=email,
             password=password,
             univ_id=univObj,
