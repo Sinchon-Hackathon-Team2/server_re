@@ -47,13 +47,13 @@ def requestCode(request):
         'univ_id': univObj,
         'nickName': "닉네임",
         }
-        user = User.objects.create_user(email=email, password='', **extra_fields)
+        # user = User.objects.create_user(email=email, password='', **extra_fields)
 
         # 2. 해당 정보로 access token, refresh token 발급
-        refresh = RefreshToken.for_user(user)
-        serializer = UserSerializer(instance=user)
-        response_body = serializer.data
-        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        # refresh = RefreshToken.for_user(user)
+        # serializer = UserSerializer(instance=user)
+        # response_body = serializer.data
+        # response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
         print(response_body)
         return Response(response_body, status=status.HTTP_200_OK)
     
@@ -107,11 +107,11 @@ def checkCode(request):
         'univ_id': univObj.id,
         'nickName': nickName,
         }
-        user = User.objects.create_user(email=email, password='', **extra_fields)
+        # user = User.objects.create_user(email=email, password='', **extra_fields)
 
         # 2. 해당 정보로 access token, refresh token 발급
-        serializer = UserSerializer(instance=user)
-        response_body = serializer.data
+        # serializer = UserSerializer(instance=user)
+        # response_body = serializer.data
         response_body['Message'] = "로그인 성공! 재방문을 환영합니다." # Replace with the actual access token
         print(response_body)
         return Response(response_body, status=status.HTTP_200_OK)
