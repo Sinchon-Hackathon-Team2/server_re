@@ -5,8 +5,7 @@ from account.models import Univ, User
 
 
 class Post(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name="user_id")
-    nickName=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_id")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     univ_id = models.ForeignKey(Univ, on_delete=models.CASCADE)
     content = models.TextField()
     createdAt = models.DateTimeField(auto_now_add=True)

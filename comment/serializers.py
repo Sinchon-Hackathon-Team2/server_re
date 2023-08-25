@@ -9,7 +9,7 @@ class CommentBaseSerializer(serializers.ModelSerializer):
 
 class CommentCreateSerializer(CommentBaseSerializer):
     class Meta(CommentBaseSerializer.Meta):
-        fields=['post_id','content','nickName']
+        fields=['post_id','content']
 
 class CommentDestroySerializer(CommentBaseSerializer):
     class Meta(CommentBaseSerializer.Meta):
