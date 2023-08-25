@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserInfoSerializer
+from .serializers import *
 from .models import User
 
 # Create your views here.
@@ -31,18 +31,33 @@ def requestCode(request):
 
     if response_data["success"] == True:
         print("코드 전송 성공")
+        response_body = { "success": True }
+        return Response(response_body)
+    
     elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
         print("이미 인증, 로그인 처리")
+        user = User.objects.get(email = email)
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(instance=user)
+        response_body = serializer.data
+        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        print(response_body)
+        return Response(response_body)
+    
     else:
         print("실패, 오류 출력")
+
 
 @permission_classes ([permissions.AllowAny])
 @api_view(['POST'])
 def checkCode(request):
+    request_data = request.data
+
     certifycodeURL = "https://univcert.com/api/v1/certifycode"
-    email = "jiwoong264@mail.hongik.ac.kr"
-    univ_name = "홍익대학교"
-    code = 2106
+    email = request_data.get('email')
+    univ_name = request_data.get('univName')
+    code = request_data.get('code')
+    nickName = request_data.get('nickName')
 
     body = {
         "key": "3b69aa74-fc31-4dd9-976f-d809da83e4d4",
@@ -51,13 +66,41 @@ def checkCode(request):
         "code": code
         }
 
-    response = requests.post(certifyURL, json=body)
+    response = requests.post(certifycodeURL, json=body)
 
     response_data = json.loads(response.content)
 
     if response_data["success"] == True:
         print("코드 확인 성공, 로그인 처리")
+        
+        univObj = Univ.objects.get(univName = univ_name)
+        univ_data = UnivSerializer.data
+        print(univ_data)
+
+        extra_fields = {
+        'email': email,
+        'univ_id': univ_data["id"],
+        'nickName': nickName,
+        }
+        user = User.objects.create_user(email=email, password='', **extra_fields)
+
+        # 2. 해당 정보로 access token, refresh token 발급
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(instance=user)
+        response_body = serializer.data
+        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        print(response_body)
+        return Response(response_body)
+    
     elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
         print("이미 인증, 로그인 처리")
+        user = User.objects.get(email = email)
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(instance=user)
+        response_body = serializer.data
+        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        print(response_body)
+        return Response(response_body)
+
     else:
         print("실패, 오류 출력")
