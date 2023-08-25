@@ -7,4 +7,9 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
 
+# post API serializer
+class AddPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
 
