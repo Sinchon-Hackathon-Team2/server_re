@@ -128,7 +128,23 @@ def checkCode(request):
 @api_view(['POST'])
 def makeUniv(request):
     # return Response(status=status.HTTP_100_CONTINUE)
-    data = {"univName" : "홍익대학교"}
+    data = {"univName" : "서강대학교"}
+    serializer = UnivSerializer(data=data)
+    print(serializer)
+    # print(serializer.data)
+    if serializer.is_valid():
+        serializer.save()  # 데이터베이스에 저장
+        print("학교 등록 성공")
+        print(serializer.data)
+    data = {"univName" : "연세대학교"}
+    serializer = UnivSerializer(data=data)
+    print(serializer)
+    # print(serializer.data)
+    if serializer.is_valid():
+        serializer.save()  # 데이터베이스에 저장
+        print("학교 등록 성공")
+        print(serializer.data)
+    data = {"univName" : "이화여자대학교"}
     serializer = UnivSerializer(data=data)
     print(serializer)
     # print(serializer.data)
