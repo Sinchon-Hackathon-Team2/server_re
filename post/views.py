@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from post.models import Post
 from account.models import Univ, User
-from post.serializers import PostSerializer, AddPostSerializer
+from follow.models import Follow
+from post.serializers import PostSerializer, AddPostSerializer, PostListSerializer, FollowingListSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -11,7 +12,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-# post 1. 글 작성
+# post 1. 글 작성 (로그인)
 
 @api_view(['POST'])
 @permission_classes((permissions.IsAuthenticated,))
@@ -109,7 +110,7 @@ def add_post(request):
     serializer = AddPostSerializer(post)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-# post 2. 글 삭제
+# post 2. 글 삭제 (로그인)
 @api_view(['DELETE'])
 @permission_classes((permissions.IsAuthenticated,))
 def delete_post(request):
@@ -124,6 +125,32 @@ def delete_post(request):
         return Response({"error": "Post not found"},status=status.HTTP_404_NOT_FOUND)
 
 # post 3. 전체 글 조회
+@api_view(['GET'])
+@permission_classes((permissions.IsAuthenticated,))
+def post_list(request):
+    user = request.user
+
+    # response: post_id, content, tag
+
+    all_post = Post.objects.all()
+    serializer = PostListSerializer(all_post, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+# post 4. 팔로우한 사람의 글만 조회
+@api_view(['GET'])
+@permission_classes((permissions.IsAuthenticated,))
+def following_list(request):
+    user = request.user
+
+    followers = Follow.objects.filter(follower_id = user).values_list('followee_id', flat=True)
+    following_posts = Post.objects.filter(user_id__in= followers)
+
+    serializer = FollowingListSerializer(following_posts, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 
 
