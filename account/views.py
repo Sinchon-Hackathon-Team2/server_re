@@ -39,22 +39,22 @@ def requestCode(request):
     elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
         print("이미 인증, 로그인 처리")
         
-        # univObj = Univ.objects.get(univName = univ_name)
+        univObj = Univ.objects.get(univName = univ_name)
 
-        # extra_fields = {
-        # # 'email': email,
-        # 'univ_id': univObj,
-        # 'nickName': "2팀",
-        # }
-        # user = User.objects.create_user(email=email, password='', **extra_fields)
+        extra_fields = {
+        # 'email': email,
+        'univ_id': univObj,
+        'nickName': "닉네임",
+        }
+        user = User.objects.create_user(email=email, password='', **extra_fields)
 
-        # # 2. 해당 정보로 access token, refresh token 발급
-        # refresh = RefreshToken.for_user(user)
-        # serializer = UserSerializer(instance=user)
-        # response_body = serializer.data
-        # response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
-        # print(response_body)
-        # return Response(response_body, status=status.HTTP_200_OK)
+        # 2. 해당 정보로 access token, refresh token 발급
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(instance=user)
+        response_body = serializer.data
+        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        print(response_body)
+        return Response(response_body, status=status.HTTP_200_OK)
     
         user = User.objects.get(email = email)
         refresh = RefreshToken.for_user(user)
@@ -97,7 +97,7 @@ def checkCode(request):
         univObj = Univ.objects.get(univName = univ_name)
 
         extra_fields = {
-        'email': email,
+        # 'email': email,
         'univ_id': univObj,
         'nickName': nickName,
         }
