@@ -30,6 +30,7 @@ def requestCode(request):
     response = requests.post(certifyURL, json=body)
     response_data = json.loads(response.content)
     print(response_data)
+   
 
     if response_data["success"] == True:
         print("코드 전송 성공")
@@ -57,10 +58,9 @@ def requestCode(request):
         return Response(response_body, status=status.HTTP_200_OK)
     
         user = User.objects.get(email = email)
-        refresh = RefreshToken.for_user(user)
         serializer = UserSerializer(instance=user)
         response_body = serializer.data
-        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        response_body['message'] = "이미 인증된 사용자입니다." # Replace with the actual access token
         print(response_body)
         return Response(response_body, status=status.HTTP_200_OK)
 
@@ -85,44 +85,51 @@ def checkCode(request):
         "univ_Name": univ_name,
         "code": code
         }
-
+    # data={
+    #     "email":email,
+    #     "univName":univ_name,
+    #     "nickName":nickName
+    # }
+    # print("로그인 성공")
+    # return Response(data=data)
     response = requests.post(certifycodeURL, json=body)
     print(response)
     response_data = json.loads(response.content)
     print(response_data)
-
+    
     if response_data["success"] == True:
         print("코드 확인 성공, 로그인 처리")
         
         univObj = Univ.objects.get(univName = univ_name)
 
         extra_fields = {
-        # 'email': email,
-        'univ_id': univObj,
+        'email': email,
+        'univ_id': univObj.id,
         'nickName': nickName,
         }
         user = User.objects.create_user(email=email, password='', **extra_fields)
 
         # 2. 해당 정보로 access token, refresh token 발급
-        refresh = RefreshToken.for_user(user)
         serializer = UserSerializer(instance=user)
         response_body = serializer.data
-        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        response_body['Message'] = "로그인 성공! 재방문을 환영합니다." # Replace with the actual access token
         print(response_body)
         return Response(response_body, status=status.HTTP_200_OK)
     
-    elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
+    elif response_data["success"] == False and response_data["message"] == "일치하지 않는 인증코드입니다.":
         print("이미 인증, 로그인 처리")
-        user = User.objects.get(email = email)
-        refresh = RefreshToken.for_user(user)
-        serializer = UserSerializer(instance=user)
-        response_body = serializer.data
-        response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
+        data={
+            "email":email,
+            "univName":univ_name,
+            "nickName":nickName
+        }
+        response_body = data
+        response_body['Message'] = '로그인 성공! 재방문을 환영합니다.' # Replace with the actual access token
         print(response_body)
         return Response(response_body)
 
     else:
-        print("실패, 오류 출력")
+        return Response("오류")
 
 @permission_classes ([permissions.AllowAny])
 @api_view(['POST'])
