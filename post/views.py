@@ -227,7 +227,7 @@ def serchMusic(request):
         "maxResults": 10,
         "q": word,
         "type": "video",
-        "key": "AIzaSyAVernaWFOQLRicwb1VumSN9HAByQBNOiw"
+        "key": "AIzaSyAF4CjHKCqwmsV74shNZ2yLWav9bfAJ9p4"
     }
 
     response = requests.get(url, params=params)
