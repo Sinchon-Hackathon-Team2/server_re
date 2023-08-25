@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-$duu^g1ly$x!$57puyx#cfhgb1n-=j3(c6qohhub&=2j!a*#wk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["https://whaply.vercel.app/", "*"]
 
 
 # Application definition
@@ -164,8 +164,8 @@ REST_AUTH = {   # 혹시 몰라 추가
     'JWT_AUTH_HTTPONLY': False,
 }
 
-CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://testmate.vercel.app']
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000', "https://whaply.vercel.app"]
 CORS_ALLOW_CREDENTIALS = True
 
 # CORS_ALLOW_HEADERS = list(default_headers) + ['x-csrftoken']
-# CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", 'https://testmate.vercel.app']
+# CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", ]
