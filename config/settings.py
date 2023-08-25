@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from corsheaders.defaults import default_headers
+# from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -59,7 +60,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
-    'corsheaders.middleware.CorsMiddleware', 
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -167,5 +167,5 @@ REST_AUTH = {   # 혹시 몰라 추가
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://testmate.vercel.app']
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = list(default_headers) + ['x-csrftoken']
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", 'https://testmate.vercel.app']
+# CORS_ALLOW_HEADERS = list(default_headers) + ['x-csrftoken']
+# CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", 'https://testmate.vercel.app']
