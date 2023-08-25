@@ -43,7 +43,7 @@ def requestCode(request):
         univObj = Univ.objects.get(univName = univ_name)
 
         extra_fields = {
-        # 'email': email,
+        'email': email,
         'univ_id': univObj,
         'nickName': "닉네임",
         }
@@ -51,10 +51,14 @@ def requestCode(request):
 
         # 2. 해당 정보로 access token, refresh token 발급
         # refresh = RefreshToken.for_user(user)
-        # serializer = UserSerializer(instance=user)
+        serializer = UserSerializer(instance=user)
         # response_body = serializer.data
         # response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
-        print(response_body)
+        # print(response_body)
+        response_body = {   'email': email,
+                            'univ_id': 1,
+                            'nickName': "닉네임",
+                            "success": True }
         return Response(response_body, status=status.HTTP_200_OK)
     
         user = User.objects.get(email = email)
@@ -100,13 +104,13 @@ def checkCode(request):
     if response_data["success"] == True:
         print("코드 확인 성공, 로그인 처리")
         
-        univObj = Univ.objects.get(univName = univ_name)
+        # univObj = Univ.objects.get(univName = univ_name)
 
-        extra_fields = {
-        'email': email,
-        'univ_id': univObj.id,
-        'nickName': nickName,
-        }
+        # extra_fields = {
+        # 'email': email,
+        # 'univ_id': univObj.id,
+        # 'nickName': nickName,
+        # }
         # user = User.objects.create_user(email=email, password='', **extra_fields)
 
         # 2. 해당 정보로 access token, refresh token 발급
