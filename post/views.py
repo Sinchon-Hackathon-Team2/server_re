@@ -17,8 +17,8 @@ class PostViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 # @permission_classes((permissions.IsAuthenticated,))
 def add_post(request):
-    user = User.objects.get(id=1)
-    univ_id = Univ.objects.get(id=1)
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
     # user = request.user
     # univ = user.univ_id
     # univ_id = Univ.objects.get(id=univ)
@@ -65,7 +65,7 @@ def add_post(request):
     thumnail10 = request.data.get('thumnail10')
 
     post = Post(
-    user_id = user,
+    user_id = user_id,
     univ_id = univ_id,
     content = content,
 
