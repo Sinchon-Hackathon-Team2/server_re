@@ -19,6 +19,7 @@ class PostViewSet(viewsets.ModelViewSet):
 def add_post(request):
     user_id = request.data.get('user_id')
     univ_id = request.data.get('univ_id')
+    nickName=request.nickName
     # user = request.user
     # univ = user.univ_id
     # univ_id = Univ.objects.get(id=univ)
@@ -65,7 +66,8 @@ def add_post(request):
     thumnail10 = request.data.get('thumnail10')
 
     post = Post(
-    user_id = user_id,
+    user_id = user,
+    nickName= nickName,
     univ_id = univ_id,
     content = content,
 
@@ -114,10 +116,11 @@ def add_post(request):
 
 # post 2. 글 삭제 (로그인)
 @api_view(['DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
+# @permission_classes((permissions.IsAuthenticated,))
 def delete_post(request):
     user = request.user
-
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
     try:
         post_id = request.data.get('post_id')
         post = Post.objects.get(id=post_id, user_id=user)
@@ -128,9 +131,11 @@ def delete_post(request):
 
 # post 3. 전체 글 조회
 @api_view(['GET'])
-@permission_classes((permissions.IsAuthenticated,))
+# @permission_classes((permissions.IsAuthenticated,))
 def post_list(request):
     user = request.user
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
 
     # response: post_id, content, tag
 
@@ -141,9 +146,11 @@ def post_list(request):
 
 # post 4. 팔로우한 사람의 글만 조회
 @api_view(['GET'])
-@permission_classes((permissions.IsAuthenticated,))
+# @permission_classes((permissions.IsAuthenticated,))
 def following_list(request):
     user = request.user
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
 
     followers = Follow.objects.filter(follower_id = user).values_list('followee_id', flat=True)
     following_posts = Post.objects.filter(user_id__in = followers)
@@ -154,8 +161,10 @@ def following_list(request):
 
 # post 5. 태그별 조회
 @api_view(['GET'])
-@permission_classes((permissions.AllowAny,))
+# @permission_classes((permissions.AllowAny,))
 def tag_list(request, tag_name):
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
     if tag_name == 'ballad_tag':
         tag_posts = Post.objects.filter(ballad_tag = True)
     elif tag_name == 'dance_tag':
@@ -175,12 +184,13 @@ def tag_list(request, tag_name):
 
 # post 6. 내 포스트 조회
 @api_view(['GET'])
-@permission_classes((permissions.IsAuthenticated,))
+# @permission_classes((permissions.IsAuthenticated,))
 def my_post(request):
     user = request.user
+    user_id = request.data.get('user_id')
+    univ_id = request.data.get('univ_id')
     my_posts = Post.objects.filter(user_id = user)
 
     serializer = MyPostSerializer(my_posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
-

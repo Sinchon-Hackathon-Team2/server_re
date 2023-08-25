@@ -16,19 +16,19 @@ class AddPostSerializer(serializers.ModelSerializer):
 class PostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
+        fields = ['id', 'nickName','content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
 
 class FollowingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
+        fields = ['id', 'nickName','content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
 
 class TagListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
+        fields = ['id', 'nickName','content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
 
 class MyPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
+        fields = ['id', 'nickName','content', 'ballad_tag', 'dance_tag', 'rap_tag', 'RandB_tag', 'indie_tag', 'rock_tag']
