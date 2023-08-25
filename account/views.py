@@ -8,6 +8,7 @@ from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import *
 from .models import User
+from rest_framework import status
 
 # Create your views here.
 @permission_classes ([permissions.AllowAny])
@@ -28,6 +29,7 @@ def requestCode(request):
     
     response = requests.post(certifyURL, json=body)
     response_data = json.loads(response.content)
+    print(response_data)
 
     if response_data["success"] == True:
         print("코드 전송 성공")
@@ -36,14 +38,15 @@ def requestCode(request):
     
     elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
         print("이미 인증, 로그인 처리")
+        
         user = User.objects.get(email = email)
         refresh = RefreshToken.for_user(user)
         serializer = UserSerializer(instance=user)
         response_body = serializer.data
         response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
         print(response_body)
-        return Response(response_body)
-    
+        return Response(response_body, status=status.HTTP_200_OK)
+
     else:
         print("실패, 오류 출력")
 
@@ -67,15 +70,16 @@ def checkCode(request):
         }
 
     response = requests.post(certifycodeURL, json=body)
-
+    print(response)
     response_data = json.loads(response.content)
+    print(response_data)
 
     if response_data["success"] == True:
         print("코드 확인 성공, 로그인 처리")
         
         univObj = Univ.objects.get(univName = univ_name)
-        univ_data = UnivSerializer.data
-        print(univ_data)
+        univ_data = univObj.data
+        
 
         extra_fields = {
         'email': email,
@@ -90,7 +94,7 @@ def checkCode(request):
         response_body = serializer.data
         response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
         print(response_body)
-        return Response(response_body)
+        return Response(response_body, status=status.HTTP_200_OK)
     
     elif response_data["success"] == False and response_data["message"] == "이미 완료된 요청입니다.":
         print("이미 인증, 로그인 처리")
@@ -104,3 +108,19 @@ def checkCode(request):
 
     else:
         print("실패, 오류 출력")
+
+# @permission_classes ([permissions.AllowAny])
+# @api_view(['POST'])
+# def makeUniv(request):
+#     # return Response(status=status.HTTP_100_CONTINUE)
+#     data = {"univName" : "연세대학교"}
+#     serializer = UnivSerializer(data=data)
+#     print(serializer)
+#     # print(serializer.data)
+#     if serializer.is_valid():
+#         serializer.save()  # 데이터베이스에 저장
+#         print("학교 등록 성공")
+#         print(serializer.data)
+#         return Response(status=status.HTTP_200_OK)
+#     else:
+#         return Response(status=status.HTTP_401_UNAUTHORIZED)
