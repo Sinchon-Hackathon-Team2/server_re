@@ -51,7 +51,7 @@ def requestCode(request):
 
         # 2. 해당 정보로 access token, refresh token 발급
         # refresh = RefreshToken.for_user(user)
-        serializer = UserSerializer(instance=user)
+        # serializer = UserSerializer(instance=user)
         # response_body = serializer.data
         # response_body['accessToken'] = str(refresh.access_token) # Replace with the actual access token
         # print(response_body)
