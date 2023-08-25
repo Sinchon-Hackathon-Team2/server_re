@@ -133,7 +133,7 @@ def checkCode(request):
         return Response(response_body)
 
     else:
-        return Response("오류")
+        return Response("유효하지 않은 코드입니다")
 
 @permission_classes ([permissions.AllowAny])
 @api_view(['POST'])
