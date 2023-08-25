@@ -226,14 +226,14 @@ def serchMusic(request):
 
     results = []
 
-    # IDs = []
-
+    IDs = []
+    # https://www.youtube.com/watch?v=
     for video in videoList:
         dict = {}
-        # v = video["id"]
-        # print(v)
-        # IDs.append(v["videoId"])
-        # print(IDs)
+        v = video["id"]
+        # id = v["videoId"]
+        IDs.append(v)
+        print(IDs)
 
         snippet = video["snippet"]
         # print(snippet)
@@ -241,8 +241,9 @@ def serchMusic(request):
         print(title)
         thumbnail = snippet["thumbnails"]["default"]["url"]
         print(thumbnail)
+        channel = snippet["channelTitle"]
 
-        dict = {"title":title, "thumbnail":thumbnail}
+        dict = {"title":title, "thumbnail":thumbnail, "channelTitle":channel}
 
         results.append(dict)
         
