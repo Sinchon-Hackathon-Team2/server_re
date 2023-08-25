@@ -18,5 +18,7 @@ urlpatterns = [
     path('tag-list/<str:hashtag_name>/', tag_list, name='tag-list'),
     path('my-post/', my_post, name='my-post'),
 
+    path('searchYoutube/', serchMusic, name='search_Youtube'),
+
 
 ]

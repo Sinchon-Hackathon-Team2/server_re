@@ -7,6 +7,8 @@ from post.serializers import PostSerializer, AddPostSerializer, PostListSerializ
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions, status
 from rest_framework.response import Response
+import requests
+import json
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -20,7 +22,7 @@ def add_post(request):
     user_id = request.data.get('user_id')
     univ_id = request.data.get('univ_id')
     user_id = User.objects.get(id=user_id)
-    univ_id = User.objects.get(univ_id=univ_id)
+    univ_id = Univ.objects.get(univ_id=univ_id)
     # user = request.user
     # univ = user.univ_id
     # univ_id = Univ.objects.get(id=univ)
@@ -109,9 +111,10 @@ def add_post(request):
     thumnail10 = thumnail10,
     )
 
-    post.save()
+    # post.save()
 
     serializer = AddPostSerializer(post)
+    
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # post 2. 글 삭제 (로그인)
@@ -195,4 +198,66 @@ def my_post(request):
     serializer = MyPostSerializer(my_posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+# # post 7. 포스트 상세 조회
+# @api_view(['GET'])
+# @permission_classes((permissions.IsAuthenticated,))
+# def postDetail(request):
+#     user_id = request.data.get('user_id')
+#     post_id = request.data.get('post_id')
+#     post = Post.objects.get(post_id=post_id)
+#     postData = post.data
+
+#     like= Post.objects.filter(post_id=post_id).values()
+
+#     likeData = list(like)
+
+#     if len(likeData) != 0:
+#         postData["isLike"]
+
+#     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def serchMusic(request):
+    word = request.data.get('word')
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        "part": "snippet",
+        "maxResults": 10,
+        "q": word,
+        "key": "AIzaSyAVernaWFOQLRicwb1VumSN9HAByQBNOiw"
+    }
+
+    response = requests.get(url, params=params)
+
+    data = json.loads(response.content)
+    videoList = data["items"]
+
+    results = []
+
+    IDs = []
+    # https://www.youtube.com/watch?v=
+    for video in videoList:
+        dict = {}
+        v = video["id"]
+        # id = v["videoId"]
+        IDs.append(v)
+        print(IDs)
+
+        snippet = video["snippet"]
+        # print(snippet)
+        title = snippet["title"]
+        print(title)
+        thumbnail = snippet["thumbnails"]["default"]["url"]
+        print(thumbnail)
+        channel = snippet["channelTitle"]
+
+        dict = {"title":title, "thumbnail":thumbnail, "channelTitle":channel}
+
+        results.append(dict)
+        
+
+    return Response(results, status=status.HTTP_200_OK)
+    # print(data)
 
