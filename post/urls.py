@@ -11,6 +11,9 @@ urlpatterns = [
     path('add-post/', add_post, name='add-post'),
     path('delete-post/', delete_post, name='delete-post'),
     path('post-list/', post_list, name='post-list'),
-    path('following-list', following_list, name='following-list'),
+    path('following-list/', following_list, name='following-list'),
+    path('tag-list/<str:hashtag_name>/', tag_list, name='tag-list'),
+    path('my-post/', my_post, name='my-post'),
+
 
 ]

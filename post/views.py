@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from post.models import Post
 from account.models import Univ, User
 from follow.models import Follow
-from post.serializers import PostSerializer, AddPostSerializer, PostListSerializer, FollowingListSerializer
+from post.serializers import PostSerializer, AddPostSerializer, PostListSerializer, FollowingListSerializer, TagListSerializer, MyPostSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -144,13 +144,42 @@ def following_list(request):
     user = request.user
 
     followers = Follow.objects.filter(follower_id = user).values_list('followee_id', flat=True)
-    following_posts = Post.objects.filter(user_id__in= followers)
+    following_posts = Post.objects.filter(user_id__in = followers)
 
     serializer = FollowingListSerializer(following_posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# post 5. 태그별 조회
+@api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
+def tag_list(request, tag_name):
+    if tag_name == 'ballad_tag':
+        tag_posts = Post.objects.filter(ballad_tag = True)
+    elif tag_name == 'dance_tag':
+        tag_posts = Post.objects.filter(dance_tag = True)
+    elif tag_name == 'rap_tag':
+        tag_posts = Post.objects.filter(rap_tag = True)
+    elif tag_name == 'RandB_tag':
+        tag_posts = Post.objects.filter(RandB_tag = True)
+    elif tag_name == 'indie_tag':
+        tag_posts = Post.objects.filter(indie_tag = True)
+    elif tag_name == 'rock_tag':
+        tag_posts = Post.objects.filter(rock_tag = True)
+    
+    serializer = TagListSerializer(tag_posts, many=True)
 
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
+# post 6. 내 포스트 조회
+@api_view(['GET'])
+@permission_classes((permissions.IsAuthenticated,))
+def my_post(request):
+    user = request.user
+    my_posts = Post.objects.filter(user_id = user)
+
+    serializer = MyPostSerializer(my_posts, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
