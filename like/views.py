@@ -17,11 +17,15 @@ def like_create_delete_view(request):
         data={'user_id':user_id,'post_id':post_id}
         serializer=LikeBaseSerializer(data=data)
         if serializer.is_valid():
-            try: 
+            try:
                 like_instance=Like.objects.get(user_id=user_id,post_id=post_id)
+                like_instance.delete()
             except Like.DoesNotExist:
                 serializer.save()
-            like_instance.delete()
+                return Response({"information":"add-like"})
+            return Response({"information":"delete-like"})
+        return Response(serializer.errors,status=400)
+            
 
 
 
